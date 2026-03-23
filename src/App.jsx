@@ -1,41 +1,30 @@
-import Cards from './Components/Cards'
-import InputBox from './Components/InputBox'
-import SideBOx from './Components/SideBOx'
-import NavBAr from './Components/NavBAr'
-import useNotes from './hooks/useNotes'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import Home from './Home'
+import DeletedNotes from './Components/DeletedNotes'
+import Login from './Components/Login'
+import Register from './Components/Register'
+
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem('token')
+  return token ? children : <Navigate to='/' />
+}
 
 const App = () => {
-  const { notesData, workData, discriptionsData, handleInputData, handleDiscriptionsData, addNotes, deleteNote, editNote } = useNotes()
-
   return (
-    <div className='bg-gray-900 min-h-screen p-5 sm:p-10 flex flex-col gap-10 text-white'>
-      <NavBAr />
-      <div className='flex gap-6 items-stretch h-[35vh]'>
-        <div className='w-[35%]'>
-          <InputBox
-            workData={workData}
-            discriptionsData={discriptionsData}
-            handleInputData={handleInputData}
-            handleDiscriptionsData={handleDiscriptionsData}
-            addNotes={addNotes}
-          />
-        </div>
-        <div className='w-[65%] h-full'>
-          <SideBOx notesData={notesData} />
-        </div>
-      </div>
-      <div className='grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
-        {notesData.map((item, idx) => (
-          <Cards
-            data={item}
-            key={idx}
-            deleteNote={deleteNote}
-            editNote={editNote}
-            idx={idx}
-          />
-        ))}
-      </div>
-    </div>
+    <Routes>
+      <Route path='/' element={<Login />} />
+      <Route path='/register' element={<Register />} />
+      <Route path='/home' element={
+        <ProtectedRoute>
+          <Home />
+        </ProtectedRoute>
+      } />
+      <Route path='/deleted' element={
+        <ProtectedRoute>
+          <DeletedNotes />
+        </ProtectedRoute>
+      } />
+    </Routes>
   )
 }
 

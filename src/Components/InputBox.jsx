@@ -1,5 +1,6 @@
 import React from 'react'
 
+
 const InputBox = ({workData, discriptionsData, handleInputData, handleDiscriptionsData, addNotes}) => {
   return (
     <div className='h-full'>
